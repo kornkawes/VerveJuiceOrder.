@@ -1,496 +1,463 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verve Juice Order</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&family=Inter:wght@400;700&family=Rubik+Bubbles&family=Noto+Sans+Thai:wght@400;700&display=swap');
-        
-        body {
-            font-family: 'Noto Sans Thai', sans-serif;
-            background: linear-gradient(135deg, #86efac, #fde047);
-        }
-        .cute-font {
-            font-family: 'Kanit', sans-serif;
-        }
-        .container {
-            max-width: 90%;
-            margin-top: 1rem;
-            margin-bottom: 1rem;
-        }
-        .card {
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-        .btn-plus-minus {
-            @apply w-8 h-8 flex items-center justify-center rounded-full text-white text-lg font-bold;
-        }
-        input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        input[type="number"] {
-            -moz-appearance: textfield;
-        }
-        .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid #fff;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Verve Juice Order</title>
+
+  <!-- Tailwind & Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+  <!-- QR generator -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&family=Inter:wght@400;700&family=Rubik+Bubbles&family=Noto+Sans+Thai:wght@400;700&display=swap');
+    body { font-family: 'Noto Sans Thai', sans-serif; background: linear-gradient(135deg, #86efac, #fde047); }
+    .cute-font { font-family: 'Kanit', sans-serif; }
+    .container { max-width: 90%; margin-top: 1rem; margin-bottom: 1rem; }
+    .card { box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -1px rgba(0,0,0,0.06); }
+    input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type="number"] { -moz-appearance: textfield; }
+    .spinner { border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid #fff; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; }
+    @keyframes spin { 0%{transform:rotate(0deg);}100%{transform:rotate(360deg);} }
+  </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
+<div class="container bg-white/30 backdrop-blur-xl p-6 rounded-3xl shadow-2xl w-full max-w-lg transition-all duration-300">
 
-    <div class="container bg-white/30 backdrop-blur-xl p-6 rounded-3xl shadow-2xl w-full max-w-lg transition-all duration-300">
-
-        <!-- Order Form Section -->
-        <div id="order-form-section">
-            <div class="flex justify-center mb-6">
-                <img src="https://github.com/kornkawes/VerveImage/blob/main/logo2.png?raw=true" alt="Verve Juice Logo" class="w-48">
-            </div>
-
-            <div class="flex justify-center space-x-6 mb-6 text-2xl text-gray-800">
-                <a href="https://www.tiktok.com/@vervejuice.th" class="hover:text-emerald-600" target="_blank" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-                <a href="https://www.instagram.com/vervejuice.th" class="hover:text-emerald-600" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-            </div>
-
-            <div class="mb-4">
-                <label for="customerName" class="block text-gray-700 font-bold mb-2">ชื่อของคุณ*</label>
-                <input type="text" id="customerName" placeholder="กรุณากรอกชื่อ-นามสกุล" class="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-300">
-            </div>
-
-            <div class="mb-4">
-                <label for="customerPhone" class="block text-gray-700 font-bold mb-2">ช่องทางการติดต่อ*</label>
-                <input type="tel" id="customerPhone" placeholder="เบอร์โทรศัพท์ (10 หลัก)" class="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-300 mb-2">
-                <div class="flex space-x-2">
-                    <input type="text" id="contactApp" placeholder="ชื่อแอป เช่น Line" class="w-1/3 px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-300">
-                    <input type="text" id="contactId" placeholder="ไอดี เช่น @vervejuice" class="w-2/3 px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-300">
-                </div>
-            </div>
-
-            <div class="mb-4">
-                <label for="customerNote" class="block text-gray-700 font-bold mb-2">หมายเหตุ*</label>
-                <textarea id="customerNote" placeholder="เช่น สะดวกรับวันไหน" class="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-300 resize-none h-24"></textarea>
-            </div>
-
-            <h2 class="text-2xl font-bold mb-4" style="color: #39531a;">เมนู</h2>
-            <div id="menu-items" class="space-y-4">
-                <!-- Menu items will be rendered here by JavaScript -->
-            </div>
-
-            <div class="mt-6 p-4 bg-emerald-100 rounded-2xl flex justify-between items-center">
-                <span class="text-lg font-bold text-gray-800">ราคารวม:</span>
-                <span id="total-price" class="text-2xl font-extrabold text-emerald-600">฿0</span>
-            </div>
-
-            <button id="confirm-order-btn" class="w-full mt-6 bg-emerald-600 text-white font-bold py-3 px-4 rounded-xl shadow-lg hover:bg-emerald-700 transition-colors">
-                ยืนยันการสั่งซื้อ
-            </button>
-        </div>
-
-        <!-- Payment Section -->
-        <div id="payment-section" class="hidden">
-            <h1 class="text-3xl font-bold text-center mb-2" style="color: #39531a;">ชำระเงิน</h1>
-            <p class="text-center text-red-600 text-xs mb-4">(กรุณาบันทึกภาพหน้าจอนี้ไว้เป็นหลักฐานคำสั่งซื้อ)</p>
-
-            <button id="back-to-menu-btn" class="mb-4 px-4 py-2 bg-gray-200 text-gray-700 font-bold rounded-xl hover:bg-gray-300 transition-colors">
-                ย้อนกลับ
-            </button>
-            <div id="order-summary" class="p-4 bg-gray-50 rounded-2xl mb-4">
-                <h3 class="font-bold text-lg mb-2">สรุปรายการสั่งซื้อ:</h3>
-                <!-- Order summary will be rendered here -->
-            </div>
-            <div class="p-4 bg-emerald-100 rounded-2xl text-center mb-6">
-                <p class="text-xl font-bold text-emerald-700">ยอดที่ต้องชำระ</p>
-                <p id="payment-total" class="text-4xl font-extrabold text-emerald-600 my-2">฿0</p>
-            </div>
-
-            <div class="space-y-4">
-                <div class="bg-gray-50 p-4 rounded-2xl flex flex-col items-center">
-                    <p class="font-bold mb-2">โอนผ่าน QR Code</p>
-                    <div id="qr-display-container" class="w-48 h-48 border border-gray-200 rounded-xl flex items-center justify-center bg-gray-100">
-                        <img id="qrCodeImage" src="https://github.com/kornkawes/Image/blob/main/unnamed%20(1).jpg?raw=true" alt="QR Code" class="w-full h-full object-contain rounded-xl" onerror="this.onerror=null; this.src='https://placehold.co/400x400/eeeeee/333333?text=QR+Code'; showMessageBox('ไม่สามารถโหลดรูปภาพได้', 'red');">
-                    </div>
-                    <p class="text-sm text-gray-500 mt-2">สแกนเพื่อชำระเงิน</p>
-                </div>
-
-                <div class="bg-gray-50 p-4 rounded-2xl">
-                    <p class="font-bold mb-1">หรือโอนผ่านบัญชีธนาคาร</p>
-                    <div class="bg-gray-100 p-3 rounded-xl flex items-center justify-between">
-                        <div class="flex-1">
-                            <p class="text-sm">ชื่อบัญชี: นาย กรกวี สายเพชร</p>
-                            <p class="text-sm">ธนาคาร: ธนาคารกสิกรไทย</p>
-                            <p class="text-sm font-bold" id="bank-account-number">เลขที่บัญชี: 014-1-08305-8</p>
-                        </div>
-                        <button id="copy-account-btn" class="ml-4 px-3 py-1 bg-gray-200 text-gray-700 text-sm font-bold rounded-lg hover:bg-gray-300 transition-colors">
-                            คัดลอก
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mt-6">
-                <label for="slipUpload" class="block text-gray-700 font-bold mb-2">อัปโหลดสลิปการโอน</label>
-                <input type="file" id="slipUpload" accept="image/*" class="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-300">
-            </div>
-
-            <div id="slip-preview-container" class="hidden mt-4 p-4 border rounded-xl bg-gray-50 flex flex-col items-center">
-                <p class="text-sm text-gray-600 mb-2">รูปสลิปที่เลือก:</p>
-                <img id="slip-preview" src="#" alt="Slip Preview" class="max-w-xs max-h-40 rounded-lg object-contain border border-gray-300" />
-            </div>
-
-            <button id="upload-slip-btn" class="w-full mt-6 bg-emerald-600 text-white font-bold py-3 px-4 rounded-xl shadow-lg hover:bg-emerald-700 transition-colors flex items-center justify-center">
-                <span id="upload-slip-text">แจ้งโอนเงิน</span>
-                <div id="upload-slip-spinner" class="spinner hidden ml-2"></div>
-            </button>
-        </div>
-
-        <!-- Confirmation Section -->
-        <div id="confirmation-section" class="hidden text-center">
-            <svg class="mx-auto h-16 w-16 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            <h1 class="text-3xl font-bold text-center mt-4 text-emerald-600 cute-font">ขอบคุณสำหรับคำสั่งซื้อ!</h1>
-            <p class="mt-2 text-gray-600">เราได้รับข้อมูลการสั่งซื้อของคุณแล้ว</p>
-            <button onclick="window.location.reload()" class="mt-6 bg-gray-400 text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:bg-gray-500 transition-colors">
-                สั่งสินค้าเพิ่ม
-            </button>
-        </div>
-
+  <!-- ================== ORDER FORM ================== -->
+  <div id="order-form-section">
+    <div class="flex justify-center mb-6">
+      <img src="https://github.com/kornkawes/VerveImage/blob/main/logo2.png?raw=true" alt="Verve Juice Logo" class="w-48"/>
     </div>
 
-    <!-- Firebase SDK -->
-    <script type="module">
-        const firebaseConfig = {
-  apiKey: "AIzaSyBUw_vRomsOZCZzdu-sGikl0hKOJ8dNyBo",
-  authDomain: "vervejuiceth-1dc53.firebaseapp.com",
-  projectId: "vervejuiceth-1dc53",
-  storageBucket: "vervejuiceth-1dc53.firebasestorage.app",
-  messagingSenderId: "537677861693",
-  appId: "1:537677861693:web:22813c2b6980091dc12b54",
-  measurementId: "G-X2YFFDK5C2"
+    <!-- Social -->
+    <div class="flex justify-center space-x-6 mb-6 text-2xl text-gray-800">
+      <a href="https://www.tiktok.com/@vervejuice.th" class="hover:text-emerald-600" target="_blank" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+      <a href="https://www.instagram.com/vervejuice.th" class="hover:text-emerald-600" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+    </div>
+
+    <h2 class="text-2xl font-bold mb-4" style="color:#39531a;">เมนู</h2>
+    <div id="menu-items" class="space-y-4"></div>
+    <hr class="my-8 border-gray-300">
+
+    <h2 class="text-2xl font-bold mb-4" style="color:#39531a;">ข้อมูลการจัดส่ง</h2>
+    <div class="mb-4">
+      <label for="customerName" class="block text-gray-700 font-bold mb-2">ชื่อของคุณ*</label>
+      <input id="customerName" type="text" placeholder="กรุณากรอกชื่อ-นามสกุล" class="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-300"/>
+    </div>
+
+    <div class="mb-4">
+      <label for="customerPhone" class="block text-gray-700 font-bold mb-2">เบอร์โทรศัพท์*</label>
+      <input id="customerPhone" type="tel" placeholder="เบอร์โทรศัพท์ (10 หลัก)" class="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-300"/>
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-gray-700 font-bold mb-2">เลือกวันจัดส่ง*</label>
+      <div id="delivery-dates-container" class="space-y-2 p-3 bg-white rounded-xl border"></div>
+      <p id="delivery-warning" class="text-xs text-red-600 mt-2 hidden">(ขอสงวนสิทธิ์ให้ทางร้านค้าเป็นฝ่ายเลือกวันในการจัดส่ง)</p>
+    </div>
+
+    <div class="mb-4">
+      <label for="customerNote" class="block text-gray-700 font-bold mb-2">หมายเหตุ</label>
+      <textarea id="customerNote" placeholder="เช่น รับที่ BTS ศาลาแดง, MRT สีลม, อื่นๆ" class="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-300 resize-none h-24"></textarea>
+    </div>
+
+    <!-- Discount -->
+    <div class="mt-6">
+      <label for="discountCode" class="block text-gray-700 font-bold mb-2">โค้ดส่วนลด</label>
+      <div class="flex space-x-2">
+        <input id="discountCode" type="text" placeholder="กรอกโค้ดส่วนลด" class="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-300"/>
+        <button id="apply-discount-btn" class="px-4 py-2 bg-gray-600 text-white font-bold rounded-xl hover:bg-gray-700 transition-colors">ใช้</button>
+      </div>
+      <p id="discount-info" class="text-sm mt-2 h-5"></p>
+    </div>
+
+    <!-- Totals -->
+    <div id="total-summary-section" class="mt-4 p-4 bg-emerald-100 rounded-2xl space-y-2">
+      <div class="flex justify-between items-center text-gray-700"><span>ยอดรวม</span><span id="subtotal-price">฿0</span></div>
+      <div id="discount-display-section" class="flex justify-between items-center text-red-500 hidden">
+        <span>ส่วนลด (<span id="discount-code-display"></span>)</span><span id="discount-amount">-฿0</span>
+      </div>
+      <div class="flex justify-between items-center text-gray-800 border-t pt-2 mt-2">
+        <span class="text-lg font-bold">ยอดสุทธิ</span>
+        <span id="total-price" class="text-2xl font-extrabold text-emerald-600">฿0</span>
+      </div>
+    </div>
+
+    <button id="confirm-order-btn" class="w-full mt-6 bg-emerald-600 text-white font-bold py-3 px-4 rounded-xl shadow-lg hover:bg-emerald-700 transition-colors">ยืนยันการสั่งซื้อ</button>
+  </div>
+
+  <!-- ================== PAYMENT ================== -->
+  <div id="payment-section" class="hidden">
+    <h1 class="text-3xl font-bold text-center mb-2" style="color:#39531a;">ชำระเงิน</h1>
+    <button id="back-to-menu-btn" class="mb-4 px-4 py-2 bg-gray-200 text-gray-700 font-bold rounded-xl hover:bg-gray-300 transition-colors">ย้อนกลับ</button>
+
+    <div id="order-summary" class="p-4 bg-gray-50 rounded-2xl mb-4"><h3 class="font-bold text-lg mb-2">สรุปรายการสั่งซื้อ:</h3></div>
+
+    <div class="p-4 bg-emerald-100 rounded-2xl text-center mb-6">
+      <p class="text-xl font-bold text-emerald-700">ยอดที่ต้องชำระ</p>
+      <p id="payment-total" class="text-4xl font-extrabold text-emerald-600 my-2">฿0</p>
+    </div>
+
+    <!-- QR & Bank -->
+    <div class="space-y-4">
+      <div class="bg-gray-50 p-4 rounded-2xl flex flex-col items-center">
+        <p class="font-bold mb-2">โอนผ่าน QR Code (PromptPay)</p>
+        <div id="qr-display-container" class="w-48 h-48 border border-gray-200 rounded-xl flex items-center justify-center bg-gray-100">
+          <!-- JS จะวาด QR ลงใน div นี้ -->
+        </div>
+        <p class="text-xs text-gray-500 mt-2 text-center">สแกนด้วยแอปธนาคาร ยอดจะถูกใส่อัตโนมัติ</p>
+      </div>
+
+      <div class="bg-gray-50 p-4 rounded-2xl">
+        <p class="font-bold mb-1">หรือโอนผ่านบัญชีธนาคาร</p>
+        <div class="bg-gray-100 p-3 rounded-xl flex items-center justify-between">
+          <div class="flex-1 text-sm">
+            <p>ชื่อบัญชี: นาย กรกวี สายเพชร</p>
+            <p>ธนาคาร: ธนาคารกสิกรไทย</p>
+            <p class="font-bold" id="bank-account-number">เลขที่บัญชี: 014-1-08305-8</p>
+          </div>
+          <button id="copy-account-btn" class="ml-4 px-3 py-1 bg-gray-200 text-gray-700 text-sm font-bold rounded-lg hover:bg-gray-300 transition-colors">คัดลอก</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ปุ่มแจ้งชำระเงิน -->
+    <button id="paid-done-btn" class="w-full mt-6 bg-emerald-600 text-white font-bold py-3 px-4 rounded-xl shadow-lg hover:bg-emerald-700 transition-colors">
+      ชำระเงินแล้ว
+    </button>
+  </div>
+
+  <!-- ================== CONFIRMATION ================== -->
+  <div id="confirmation-section" class="hidden text-center">
+    <svg class="mx-auto h-16 w-16 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    <h1 class="text-3xl font-bold text-center mt-4 text-emerald-600 cute-font">ขอบคุณสำหรับคำสั่งซื้อ!</h1>
+    <p class="mt-2 text-gray-600">หลังจากตรวจสอบยอดชำระแล้ว จะเริ่มจัดเตรียมคำสั่งซื้อให้ทันทีครับ</p>
+    <p class="text-center text-red-600 text-xs mb-4">(กรุณาบันทึกภาพหน้าจอนี้ไว้เป็นหลักฐานคำสั่งซื้อ)</p>
+    <div id="final-order-summary" class="mt-6 text-left p-4 bg-gray-50 rounded-2xl border border-emerald-200"></div>
+    <button onclick="window.location.reload()" class="mt-6 bg-gray-400 text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:bg-gray-500 transition-colors">สั่งสินค้าเพิ่ม</button>
+  </div>
+
+</div>
+
+<script>
+/* ================== CONFIG ================== */
+const deliveryDates = [
+  '2025-09-19', // เพิ่ม/ลดวันจัดส่งได้ที่นี่
+];
+const menu = [
+  { id:'apple-kiss',   name:'Apple Kiss',   price:70, unit:'ขวด (200ml)', ingredients:'แอปเปิ้ลเขียว, ขิง, มะนาว', properties:'ช่วยป้องกันผิวจากแสงแดด, ลดจุดด่างดำ, รอยสิว', imageUrl:'https://github.com/kornkawes/VerveImage/blob/main/1.png?raw=true' },
+  { id:'blush-bloom',  name:'Blush Bloom',  price:70, unit:'ขวด (200ml)', ingredients:'มะเขือเทศ, สับปะรด, มะนาว', properties:'ช่วยผลัดเซลล์ผิวเก่าและลดริ้วรอย', imageUrl:'https://github.com/kornkawes/VerveImage/blob/main/2.png?raw=true' },
+  { id:'happy-tummy',  name:'Happy Tummy',  price:70, unit:'ขวด (200ml)', ingredients:'แอปเปิ้ล, กระชาย, ขิง, มะนาว', properties:'ล้างสารพิษ, รักษาอาการท้องผูก, ท้องอืด, จุกเสียดแน่นท้อง', imageUrl:'https://github.com/kornkawes/VerveImage/blob/main/3.png?raw=true' },
+  { id:'hearty-green', name:'Hearty Green', price:70, unit:'ขวด (200ml)', ingredients:'แอปเปิ้ล, สับปะรด, แตงกวาญี่ปุ่น', properties:'ลดคอเลสเตอรอลและต่อต้านมะเร็ง', imageUrl:'https://github.com/kornkawes/VerveImage/blob/main/4.png?raw=true' },
+  { id:'sweet-detox',  name:'Sweet Detox',  price:70, unit:'ขวด (200ml)', ingredients:'แอปเปิ้ล, แครอท, บีทรูท', properties:'ล้างสารพิษสำหรับคนควบคุมน้ำหนัก, ต้านสารอนุมูลอิสระ', imageUrl:'https://github.com/kornkawes/VerveImage/blob/main/5.png?raw=true' },
+  { id:'beet-love',    name:'Beet Love',    price:70, unit:'ขวด (200ml)', ingredients:'แอปเปิ้ล, บีทรูท, มะนาว', properties:'ดูแลสุขภาพหัวใจและควบคุมความดันโลหิต', imageUrl:'https://github.com/kornkawes/VerveImage/blob/main/6.png?raw=true' },
+  { id:'smart-sip',    name:'Smart Sip',    price:70, unit:'ขวด (200ml)', ingredients:'แอปเปิ้ล, เคล, สับปะรด', properties:'ช่วยบำรุงการทำงานของสมองและบำรุงสายตา', imageUrl:'https://github.com/kornkawes/VerveImage/blob/main/7.png?raw=true' },
+  { id:'recharge-me',  name:'Recharge Me',  price:70, unit:'ขวด (200ml)', ingredients:'แอปเปิ้ล, ขิง, มะนาว', properties:'กระตุ้นร่างกายให้ฟื้นตัวจากการเมื่อยล้า', imageUrl:'https://github.com/kornkawes/VerveImage/blob/main/8.png?raw=true' },
+];
+const discountCodes = [
+  { code:"SUCHATANDSOMPOP", type:"percent", value:15, expiryDate:"2025-12-31", minSpend:0, minItems:5 },
+  { code:"VERVETIKTOK",     type:"percent", value:10, expiryDate:"2025-09-30", minSpend:0, minItems:3 }
+];
+const n8nWebhookUrl = "https://verve2.app.n8n.cloud/webhook-test/fd207b2d-6937-4fdb-9ec1-77e6a50860c9";
+const PROMPTPAY_MOBILE = '0900172681';
+const TH_TIMEZONE = 'Asia/Bangkok';
+
+/* ================== UTIL & STATE ================== */
+const showMessageBox = (message, color) => {
+  const colorMap = { red:'bg-red-500', green:'bg-green-500' };
+  const box = document.createElement('div');
+  box.className = `fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${colorMap[color]||'bg-gray-500'} text-white px-6 py-4 rounded-xl shadow-lg z-50 transition-all duration-300`;
+  box.textContent = message;
+  document.body.appendChild(box);
+  setTimeout(() => box.remove(), 3000);
 };
+const getOrderQueueNumber = () => {
+  const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'; let r=''; for(let i=0;i<4;i++) r+=chars.charAt(Math.floor(Math.random()*chars.length)); return r;
+};
+async function fetchWithRetry(url, options, retries=3, delay=1000) {
+  for(let i=0;i<retries;i++){
+    try{ const res=await fetch(url, options); if(res.ok) return res;
+      if(res.status===429||res.status>=500){ await new Promise(r=>setTimeout(r, delay*Math.pow(2,i))); }
+      else { throw new Error(`HTTP error! status: ${res.status}`); }
+    }catch(e){ if(i<retries-1){ await new Promise(r=>setTimeout(r, delay*Math.pow(2,i))); } else { throw e; } }
+  }
+}
+let order = { items:{}, total:0, subtotal:0, discount:null, totalItems:0 };
 
-        // Import Firebase modules
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-storage.js";
+/* ================== PROMPTPAY QR HELPERS ================== */
+function tlv(id, value){ const len=String(value.length).padStart(2,'0'); return id+len+value; }
+function formatPhoneToPromptPay(phone){ let d=(phone||'').replace(/\D/g,''); if(d.startsWith('0')) d='66'+d.slice(1); else if(!d.startsWith('66')) d='66'+d; return d; }
+function crc16ccitt(input){ let crc=0xFFFF; for(let i=0;i<input.length;i++){ crc^=input.charCodeAt(i)<<8; for(let j=0;j<8;j++){ crc=(crc&0x8000)?((crc<<1)^0x1021):(crc<<1); crc&=0xFFFF; } } return crc.toString(16).toUpperCase().padStart(4,'0'); }
+function buildPromptPayDynamicByMobile(mobile, amountTHB, opts={}) {
+  const phone=formatPhoneToPromptPay(mobile);
+  const id00=tlv('00','01'); const id01=tlv('01','12');
+  const mai=tlv('00','A000000677010111')+tlv('01',phone);
+  const id29=tlv('29',mai);
+  const id52=tlv('52','0000'); const id53=tlv('53','764');
+  const id54=tlv('54', Number(amountTHB||0).toFixed(2));
+  const id58=tlv('58','TH'); const id59=tlv('59',(opts.merchantName||'VERVE JUICE').slice(0,25));
+  const id60=tlv('60',(opts.merchantCity||'BANGKOK').slice(0,15));
+  let id62=''; if(opts.reference){ const rf=tlv('05', String(opts.reference).slice(0,25)); id62=tlv('62', rf); }
+  const payloadNoCRC=id00+id01+id29+id52+id53+id54+id58+id59+id60+id62+'6304';
+  const crc=crc16ccitt(payloadNoCRC); return payloadNoCRC+crc;
+}
+function renderPromptPayQR(amountBaht, orderId){
+  const container=document.getElementById('qr-display-container'); if(!container) return;
+  container.innerHTML='';
+  const payload=buildPromptPayDynamicByMobile(PROMPTPAY_MOBILE, amountBaht, { merchantName:'VERVE JUICE', merchantCity:'BANGKOK', reference:orderId });
+  new QRCode(container, { text: payload, width:200, height:200, correctLevel: QRCode.CorrectLevel.M });
+}
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const storage = getStorage(app);
+/* ================== RENDERERS ================== */
+const menuItemsEl = document.getElementById('menu-items');
+const subtotalPriceEl = document.getElementById('subtotal-price');
+const discountAmountEl = document.getElementById('discount-amount');
+const totalPriceEl = document.getElementById('total-price');
+const discountDisplaySectionEl = document.getElementById('discount-display-section');
+const discountCodeDisplayEl = document.getElementById('discount-code-display');
+const discountCodeInputEl = document.getElementById('discountCode');
+const discountInfoEl = document.getElementById('discount-info');
+const deliveryDatesContainerEl = document.getElementById('delivery-dates-container');
+const deliveryWarningEl = document.getElementById('delivery-warning');
 
-        // --- Start of the main script ---
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            const menu = [
-                { id: 'apple-kiss', name: 'Apple Kiss', price: 60, unit: 'ขวด', ingredients: 'แอปเปิ้ลเขียว, ขิง, มะนาว', properties: 'สรรพคุณ: ช่วยป้องกันผิวจากแสงแดด, ลดจุดด่างดำ, รอยสิว', imageUrl: 'https://github.com/kornkawes/VerveImage/blob/main/1.png?raw=true' },
-                { id: 'blush-bloom', name: 'Blush Bloom', price: 60, unit: 'ขวด', ingredients: 'มะเขือเทศ, สับปะรด, มะนาว', properties: 'สรรพคุณ: ช่วยผลัดเซลล์ผิวเก่าและลดริ้วรอย', imageUrl: 'https://github.com/kornkawes/VerveImage/blob/main/2.png?raw=true' },
-                { id: 'happy-tummy', name: 'Happy Tummy', price: 60, unit: 'ขวด', ingredients: 'แอปเปิ้ล, กระชาย, ขิง, มะนาว', properties: 'สรรพคุณ: ล้างสารพิษ, รักษาอาการท้องผูก, ท้องอืด, จุกเสียดแน่นท้อง', imageUrl: 'https://github.com/kornkawes/VerveImage/blob/main/3.png?raw=true' },
-                { id: 'hearty-green', name: 'Hearty Green', price: 60, unit: 'ขวด', ingredients: 'แอปเปิ้ล, สับปะรด, แตงกวา', properties: 'สรรพคุณ: ลดคอเลสเตอรอลและต่อต้านมะเร็ง', imageUrl: 'https://github.com/kornkawes/VerveImage/blob/main/4.png?raw=true' },
-                { id: 'sweet-detox', name: 'Sweet Detox', price: 60, unit: 'ขวด', ingredients: 'แอปเปิ้ล, แครอท, บีทรูท', properties: 'สรรพคุณ: ล้างสารพิษสำหรับคนควบคุมน้ำหนัก, ต้านสารอนุมูลอิสระ', imageUrl: 'https://github.com/kornkawes/VerveImage/blob/main/5.png?raw=true' },
-                { id: 'beet-love', name: 'Beet Love', price: 60, unit: 'ขวด', ingredients: 'แอปเปิ้ล, บีทรูท, มะนาว', properties: 'สรรพคุณ: ดูแลสุขภาพหัวใจและควบคุมความดันโลหิต', imageUrl: 'https://github.com/kornkawes/VerveImage/blob/main/6.png?raw=true' },
-                { id: 'smart-sip', name: 'Smart Sip', price: 60, unit: 'ขวด', ingredients: 'แอปเปิ้ล, คะน้า, สับปะรด', properties: 'สรรพคุณ: ช่วยบำรุงการทำงานของสมองและบำรุงสายตา', imageUrl: 'https://github.com/kornkawes/VerveImage/blob/main/7.png?raw=true' },
-                { id: 'recharge-me', name: 'Recharge Me', price: 60, unit: 'ขวด', ingredients: 'แอปเปิ้ล, ขิง, มะนาว', properties: 'สรรพคุณ: กระตุ้นร่างกายให้ฟื้นตัวจากการเมื่อยล้า', imageUrl: 'https://github.com/kornkawes/VerveImage/blob/main/8.png?raw=true' }
-            ];
+function renderMenu(){
+  menuItemsEl.innerHTML='';
+  menu.forEach(item=>{
+    const quantity = order.items[item.id]?.quantity || 0;
+    const itemHtml = `
+      <div class="p-4 bg-gray-50 rounded-xl card flex items-center space-x-4">
+        <img src="${item.imageUrl}" alt="${item.name}" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
+        <div class="flex-1">
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex-1">
+              <h3 class="font-bold text-gray-800">${item.name}</h3>
+              <p class="text-sm text-gray-500"><span class="font-bold">ราคา:</span> ฿${item.price} ต่อ ${item.unit}</p>
+              <p class="text-xs text-gray-400 mt-1"><span class="font-bold">ส่วนผสม:</span> ${item.ingredients}</p>
+              <p class="text-xs text-gray-400 mt-1"><span class="font-bold">สรรพคุณ:</span> ${item.properties}</p>
+            </div>
+          </div>
+          <div class="mt-2 text-sm text-gray-700">
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input type="checkbox" class="form-checkbox h-4 w-4 text-emerald-600 rounded" data-id="${item.id}" onchange="toggleAllergyInput(this)">
+              <span>แจ้งส่วนผสมที่แพ้ (ถ้ามี)</span>
+            </label>
+            <div id="allergy-input-${item.id}" class="mt-2 hidden">
+              <input type="text" data-id="${item.id}" oninput="updateAllergyNote(this)" placeholder="เช่น แพ้มะม่วง" class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-1 focus:ring-emerald-500"/>
+              <p class="mt-1 text-xs text-red-500">หมายเหตุ: รสชาติอาจแตกต่างจากสูตรปกติเนื่องจากมีการปรับเปลี่ยนส่วนผสม</p>
+            </div>
+          </div>
+          <div class="flex items-center justify-center space-x-2 mt-4">
+            <button data-id="${item.id}" data-action="minus" class="w-8 h-8 flex items-center justify-center rounded-full text-white text-lg font-bold bg-emerald-400 hover:bg-emerald-500">-</button>
+            <input type="number" data-id="${item.id}" class="w-12 text-center border-none bg-transparent font-bold focus:outline-none" value="${quantity}" min="0" readonly/>
+            <button data-id="${item.id}" data-action="plus" class="w-8 h-8 flex items-center justify-center rounded-full text-white text-lg font-bold bg-emerald-600 hover:bg-emerald-700">+</button>
+          </div>
+        </div>
+      </div>`;
+    menuItemsEl.insertAdjacentHTML('beforeend', itemHtml);
+    if(order.items[item.id]?.allergyNote){
+      const checkbox = menuItemsEl.querySelector(`input[type="checkbox"][data-id="${item.id}"]`);
+      const allergyDiv = document.getElementById(`allergy-input-${item.id}`);
+      checkbox.checked = true; allergyDiv.classList.remove('hidden');
+      allergyDiv.querySelector('input').value = order.items[item.id].allergyNote;
+    }
+  });
+}
+window.toggleAllergyInput = (checkbox)=>{
+  const id=checkbox.dataset.id; const div=document.getElementById(`allergy-input-${id}`);
+  if(checkbox.checked){ div.classList.remove('hidden'); }
+  else { div.classList.add('hidden'); const input=div.querySelector('input'); input.value=''; if(order.items[id]) order.items[id].allergyNote=''; }
+};
+window.updateAllergyNote = (input)=>{
+  const id=input.dataset.id; const note=input.value.trim();
+  if(order.items[id]){ order.items[id].allergyNote=note; if(!note){ const cb=document.querySelector(`input[type="checkbox"][data-id="${id}"]`); cb.checked=false; document.getElementById(`allergy-input-${id}`).classList.add('hidden'); } }
+};
+function renderDeliveryDates(){
+  deliveryDatesContainerEl.innerHTML=''; const today=new Date(); today.setHours(0,0,0,0);
+  deliveryDates.forEach(ds=>{
+    const d=new Date(ds+'T00:00:00'); if(d>=today){
+      const f=d.toLocaleDateString('th-TH',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+      const id=`date-${ds}`; const wrap=document.createElement('div'); wrap.className='flex items-center';
+      const input=document.createElement('input'); input.type='checkbox'; input.id=id; input.name='deliveryDate'; input.value=ds; input.className='h-4 w-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500';
+      const label=document.createElement('label'); label.htmlFor=id; label.textContent=f; label.className='ml-3 block text-sm text-gray-900';
+      wrap.append(input,label); deliveryDatesContainerEl.appendChild(wrap);
+    }
+  });
+}
 
-            const menuItemsEl = document.getElementById('menu-items');
-            const totalPriceEl = document.getElementById('total-price');
-            const confirmOrderBtn = document.getElementById('confirm-order-btn');
-            const orderFormSection = document.getElementById('order-form-section');
-            const paymentSection = document.getElementById('payment-section');
-            const confirmationSection = document.getElementById('confirmation-section');
-            const paymentTotalEl = document.getElementById('payment-total');
-            const orderSummaryEl = document.getElementById('order-summary');
-            const slipUploadEl = document.getElementById('slipUpload');
-            const customerNameEl = document.getElementById('customerName');
-            const customerPhoneEl = document.getElementById('customerPhone');
-            const contactAppEl = document.getElementById('contactApp');
-            const contactIdEl = document.getElementById('contactId');
-            const customerNoteEl = document.getElementById('customerNote');
-            const copyAccountBtn = document.getElementById('copy-account-btn');
-            const slipPreviewContainerEl = document.getElementById('slip-preview-container');
-            const slipPreviewEl = document.getElementById('slip-preview');
-            const uploadSlipBtn = document.getElementById('upload-slip-btn');
-            const backToMenuBtn = document.getElementById('back-to-menu-btn');
-            const uploadSlipTextEl = document.getElementById('upload-slip-text');
-            const uploadSlipSpinnerEl = document.getElementById('upload-slip-spinner');
+/* ================== TOTALS ================== */
+function updateTotal(){
+  let subtotal=0, totalItems=0;
+  for(const id in order.items){
+    const itm=order.items[id]; if(itm.quantity>0){ subtotal+=itm.price*itm.quantity; totalItems+=itm.quantity; }
+  }
+  order.subtotal=subtotal; order.totalItems=totalItems;
+  if(order.discount){
+    const {minSpend,minItems}=order.discount;
+    if(subtotal<minSpend || totalItems<minItems){ order.discount=null; discountInfoEl.textContent=''; }
+  }
+  let discountValue=0;
+  if(order.discount){ discountValue = order.discount.type==='fixed' ? order.discount.value : (subtotal*order.discount.value)/100; }
+  const total=Math.max(subtotal-discountValue,0); order.total=total;
+  subtotalPriceEl.textContent=`฿${subtotal}`;
+  if(order.discount){ discountAmountEl.textContent=`-฿${discountValue.toFixed(2)}`; discountCodeDisplayEl.textContent=order.discount.code; discountDisplaySectionEl.classList.remove('hidden'); }
+  else { discountDisplaySectionEl.classList.add('hidden'); }
+  totalPriceEl.textContent=`฿${total.toFixed(2)}`;
+}
 
-            let order = { items: {}, total: 0 };
-            
-            window.showMessageBox = (message, color) => {
-                const messageBox = document.createElement('div');
-                messageBox.className = `fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-${color}-500 text-white px-6 py-4 rounded-xl shadow-lg z-50 transition-all duration-300`;
-                messageBox.textContent = message;
-                document.body.appendChild(messageBox);
-                setTimeout(() => { messageBox.remove(); }, 3000);
-            };
+/* ================== SUMMARY ================== */
+function renderOrderSummary(container, data, includeTotal){
+  container.innerHTML='';
+  const displayDate=new Date(data.orderDate).toLocaleString('th-TH',{year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit',timeZone:TH_TIMEZONE});
+  const formattedDeliveryDates=data.deliveryDates.map(s=> new Date(s+'T00:00:00').toLocaleDateString('th-TH',{weekday:'short',day:'numeric',month:'short'}) ).join(', ');
+  const fields=[ ['Order ID', data.queueNumber], ['วันที่สั่ง', displayDate], ['วันจัดส่ง', formattedDeliveryDates], ['ชื่อลูกค้า', data.customerName], ['เบอร์โทรศัพท์', data.customerContact.phone] ];
+  if(data.customerNote) fields.push(['หมายเหตุ', data.customerNote]);
+  fields.forEach(([l,v],i)=>{ const p=document.createElement('p'); p.className=`text-sm font-bold text-gray-700${i===0?'':' mt-2'}`; p.innerHTML=`<span class="font-bold">${l}:</span> ${v}`; container.appendChild(p); });
+  const listDiv=document.createElement('div'); listDiv.className='mt-4'; const h4=document.createElement('h4'); h4.className='font-bold'; h4.textContent='รายการสั่งซื้อ:'; listDiv.appendChild(h4);
+  data.items.forEach(item=>{ const p=document.createElement('p'); p.className='text-sm text-gray-600 ml-2'; p.textContent=`- ${item.name} x ${item.quantity} ${item.unit} (฿${item.price*item.quantity})`; listDiv.appendChild(p);
+    if(item.allergyNote){ const ap=document.createElement('p'); ap.className='ml-6 text-xs text-red-500'; ap.textContent=`หมายเหตุแพ้อาหาร: ${item.allergyNote}`; listDiv.appendChild(ap); }
+  });
+  container.appendChild(listDiv);
+  const totalsDiv=document.createElement('div'); totalsDiv.className='mt-2 pt-2 border-t';
+  const subP=document.createElement('p'); subP.className='text-sm text-right text-gray-600'; subP.textContent=`ยอดรวม: ฿${data.subtotal.toFixed(2)}`; totalsDiv.appendChild(subP);
+  if(data.discount){ const discAmt = data.discount.type==='fixed' ? data.discount.value : (data.subtotal*data.discount.value)/100; const discP=document.createElement('p'); discP.className='text-sm text-right text-red-500'; discP.textContent=`ส่วนลด (${data.discount.code}): -฿${discAmt.toFixed(2)}`; totalsDiv.appendChild(discP); }
+  if(includeTotal){ const totalDiv=document.createElement('div'); totalDiv.className='flex justify-between items-center mt-1';
+    const label=document.createElement('span'); label.className='font-bold text-gray-800'; label.textContent='ยอดสุทธิ:'; const value=document.createElement('span'); value.className='text-xl font-extrabold text-emerald-600'; value.textContent=`฿${data.total.toFixed(2)}`;
+    totalDiv.append(label,value); totalsDiv.appendChild(totalDiv);
+  }
+  container.appendChild(totalsDiv);
+}
 
-            const getOrderQueueNumber = () => {
-                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-                let result = '';
-                for (let i = 0; i < 3; i++) {
-                    result += chars.charAt(Math.floor(Math.random() * chars.length));
-                }
-                return result;
-            };
-            
-            window.toggleAllergyInput = (checkbox) => {
-                const itemId = checkbox.dataset.id;
-                const allergyInputDiv = document.getElementById(`allergy-input-${itemId}`);
-                if (checkbox.checked) {
-                    allergyInputDiv.classList.remove('hidden');
-                } else {
-                    allergyInputDiv.classList.add('hidden');
-                    const input = allergyInputDiv.querySelector('input');
-                    input.value = '';
-                    if (order.items[itemId]) {
-                        order.items[itemId].allergyNote = '';
-                    }
-                }
-            };
+/* ================== EVENTS ================== */
+const confirmOrderBtn = document.getElementById('confirm-order-btn');
+const orderFormSection = document.getElementById('order-form-section');
+const paymentSection = document.getElementById('payment-section');
+const confirmationSection = document.getElementById('confirmation-section');
+const orderSummaryEl = document.getElementById('order-summary');
+const paymentTotalEl = document.getElementById('payment-total');
+const customerNameEl = document.getElementById('customerName');
+const customerPhoneEl = document.getElementById('customerPhone');
+const customerNoteEl = document.getElementById('customerNote');
+const applyDiscountBtnEl = document.getElementById('apply-discount-btn');
+const backToMenuBtn = document.getElementById('back-to-menu-btn');
+const copyAccountBtn = document.getElementById('copy-account-btn');
+const paidDoneBtn = document.getElementById('paid-done-btn');
 
-            window.updateAllergyNote = (input) => {
-                const itemId = input.dataset.id;
-                if (order.items[itemId]) {
-                    order.items[itemId].allergyNote = input.value;
-                }
-            };
+menuItemsEl.addEventListener('click', e=>{
+  const btn=e.target.closest('button'); if(!btn || !btn.dataset.action) return;
+  const id=btn.dataset.id;
+  if(!order.items[id]){ const src=menu.find(i=>i.id===id); order.items[id]={...src, quantity:0, allergyNote:''}; }
+  if(btn.dataset.action==='plus') order.items[id].quantity++;
+  else if(btn.dataset.action==='minus' && order.items[id].quantity>0) order.items[id].quantity--;
+  if(order.items[id].quantity===0 && !order.items[id].allergyNote) delete order.items[id];
+  const inputEl=menuItemsEl.querySelector(`input[data-id="${id}"][type="number"]`); if(inputEl) inputEl.value=order.items[id]?.quantity||0;
+  updateTotal();
+});
 
-            const updateTotal = () => {
-                let total = 0;
-                for (const itemId in order.items) {
-                    if (order.items[itemId].quantity > 0) {
-                        const item = menu.find(i => i.id === itemId);
-                        total += (item ? item.price : 0) * order.items[itemId].quantity;
-                    }
-                }
-                order.total = total;
-                totalPriceEl.textContent = `฿${total}`;
-            };
-            
-            const renderMenu = () => {
-                menuItemsEl.innerHTML = '';
-                menu.forEach(item => {
-                    const quantity = order.items[item.id] ? order.items[item.id].quantity : 0;
-                    const allergyNote = order.items[item.id] ? order.items[item.id].allergyNote : '';
-                    const hasAllergy = allergyNote !== '';
+applyDiscountBtnEl.addEventListener('click', ()=>{
+  const code=discountCodeInputEl.value.trim().toUpperCase();
+  if(!code){ order.discount=null; discountInfoEl.textContent=''; updateTotal(); return; }
+  const found=discountCodes.find(c=>c.code===code);
+  if(!found){ order.discount=null; discountInfoEl.textContent='โค้ดส่วนลดไม่ถูกต้อง'; discountInfoEl.className='text-sm mt-2 h-5 text-red-500'; updateTotal(); return; }
+  const today=new Date(); today.setHours(0,0,0,0);
+  const expiry=new Date(found.expiryDate); expiry.setHours(23,59,59,999);
+  if(today>expiry){ order.discount=null; discountInfoEl.textContent='โค้ดนี้หมดอายุแล้ว'; discountInfoEl.className='text-sm mt-2 h-5 text-red-500'; updateTotal(); return; }
+  if(order.subtotal<found.minSpend){ order.discount=null; discountInfoEl.textContent=`ต้องมียอดสั่งซื้อขั้นต่ำ ฿${found.minSpend}`; discountInfoEl.className='text-sm mt-2 h-5 text-red-500'; updateTotal(); return; }
+  if(order.totalItems<found.minItems){ order.discount=null; discountInfoEl.textContent=`ต้องสั่งซื้อขั้นต่ำ ${found.minItems} ขวด`; discountInfoEl.className='text-sm mt-2 h-5 text-red-500'; updateTotal(); return; }
+  order.discount=found; discountInfoEl.textContent='ใช้โค้ดส่วนลดสำเร็จ!'; discountInfoEl.className='text-sm mt-2 h-5 text-green-600'; updateTotal();
+});
 
-                    const itemHtml = `
-                        <div class="p-4 bg-gray-50 rounded-xl card flex items-center space-x-4">
-                            <img src="${item.imageUrl}" alt="${item.name}" class="w-32 h-32 rounded-lg object-cover flex-shrink-0">
-                            <div class="flex-1">
-                                <div class="flex items-center justify-between mb-2">
-                                    <div class="flex-1">
-                                        <h3 class="font-bold text-gray-800">${item.name}</h3>
-                                        <p class="text-sm text-gray-500"><span class="font-bold">ราคา:</span> ฿${item.price} ต่อ ${item.unit}</p>
-                                        <p class="text-xs text-gray-400 mt-1"><span class="font-bold">ส่วนผสม:</span> ${item.ingredients}</p>
-                                        <p class="text-xs text-gray-400 mt-1"><span class="font-bold">สรรพคุณ:</span> ${item.properties}</p>
-                                    </div>
-                                </div>
+confirmOrderBtn.addEventListener('click', ()=>{
+  const name=customerNameEl.value.trim();
+  const phone=customerPhoneEl.value.trim();
+  const note=customerNoteEl.value.trim();
+  const selectedDatesNodes=document.querySelectorAll('#delivery-dates-container input[type="checkbox"]:checked');
+  const chosenDates=Array.from(selectedDatesNodes).map(n=>n.value);
 
-                                <div class="mt-2 text-sm text-gray-700">
-                                    <label class="flex items-center space-x-2 cursor-pointer">
-                                        <input type="checkbox" class="form-checkbox h-4 w-4 text-emerald-600 rounded" data-id="${item.id}" onchange="toggleAllergyInput(this)">
-                                        <span>แจ้งส่วนผสมที่แพ้ (ถ้ามี)</span>
-                                    </label>
-                                    <div id="allergy-input-${item.id}" class="mt-2 ${hasAllergy ? '' : 'hidden'}">
-                                        <input type="text" data-id="${item.id}" value="${allergyNote}" oninput="updateAllergyNote(this)" placeholder="เช่น แพ้มะม่วง" class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-1 focus:ring-emerald-500">
-                                        <p class="mt-1 text-xs text-red-500">
-                                            หมายเหตุ: รสชาติอาจแตกต่างจากสูตรปกติเนื่องจากมีการปรับเปลี่ยนส่วนผสม
-                                        </p>
-                                    </div>
-                                </div>
-                                
-                                <div class="flex items-center justify-center space-x-2 mt-4">
-                                    <button data-id="${item.id}" data-action="minus" class="btn-plus-minus bg-emerald-400 hover:bg-emerald-500 transition-colors rounded-full">-</button>
-                                    <input type="number" data-id="${item.id}" class="w-12 text-center border-none bg-transparent font-bold focus:outline-none" value="${quantity}" min="0" readonly>
-                                    <button data-id="${item.id}" data-action="plus" class="btn-plus-minus bg-emerald-600 hover:bg-emerald-700 transition-colors rounded-full">+</button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    menuItemsEl.insertAdjacentHTML('beforeend', itemHtml);
-                });
-            };
+  if(!name) return showMessageBox('กรุณากรอกชื่อให้ครบถ้วน','red');
+  if(!/^\d{10}$/.test(phone)) return showMessageBox('กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง (10 หลัก)','red');
+  if(chosenDates.length===0) return showMessageBox('กรุณาเลือกวันจัดส่งอย่างน้อย 1 วัน','red');
+  if(Object.keys(order.items).length===0) return showMessageBox('กรุณาเลือกเมนูอย่างน้อย 1 รายการ','red');
 
-            menuItemsEl.addEventListener('click', (e) => {
-                const button = e.target.closest('button');
-                if (!button) return;
+  const finalOrder = {
+    queueNumber: getOrderQueueNumber(),
+    customerName: name,
+    customerContact: { phone },
+    customerNote: note,
+    deliveryDates: chosenDates,
+    orderDate: new Date().toISOString(),
+    items: Object.values(order.items).filter(i=>i.quantity>0),
+    subtotal: order.subtotal,
+    discount: order.discount,
+    total: order.total,
+    totalItems: order.totalItems
+  };
 
-                const itemId = button.dataset.id;
-                const action = button.dataset.action;
-                if (!order.items[itemId]) {
-                    order.items[itemId] = { ...menu.find(item => item.id === itemId), quantity: 0, allergyNote: '' };
-                }
+  localStorage.setItem('currentOrder', JSON.stringify(finalOrder));
+  renderOrderSummary(orderSummaryEl, finalOrder, false);
+  paymentTotalEl.textContent = `฿${finalOrder.total.toFixed(2)}`;
+  orderFormSection.classList.add('hidden');
+  paymentSection.classList.remove('hidden');
 
-                if (action === 'plus') {
-                    order.items[itemId].quantity++;
-                } else if (action === 'minus' && order.items[itemId].quantity > 0) {
-                    order.items[itemId].quantity--;
-                }
+  // วาด QR ทันที
+  renderPromptPayQR(finalOrder.total, finalOrder.queueNumber);
+});
 
-                if (order.items[itemId].quantity === 0) {
-                    delete order.items[itemId];
-                }
+backToMenuBtn.addEventListener('click', ()=>{
+  paymentSection.classList.add('hidden');
+  orderFormSection.classList.remove('hidden');
+});
 
-                const inputEl = menuItemsEl.querySelector(`input[data-id="${itemId}"][type="number"]`);
-                if (inputEl) {
-                    inputEl.value = order.items[itemId] ? order.items[itemId].quantity : 0;
-                }
+copyAccountBtn.addEventListener('click', ()=>{
+  const account=document.getElementById('bank-account-number').textContent.split(': ')[1];
+  navigator.clipboard.writeText(account).then(()=>showMessageBox('คัดลอกเลขบัญชีแล้ว!','green'),()=>showMessageBox('คัดลอกไม่สำเร็จ','red'));
+});
 
-                updateTotal();
-            });
+paidDoneBtn.addEventListener('click', async ()=>{
+  try{
+    const currentOrder = JSON.parse(localStorage.getItem('currentOrder')||'null');
+    if(!currentOrder) return showMessageBox('ไม่พบข้อมูลคำสั่งซื้อ','red');
 
-            confirmOrderBtn.addEventListener('click', async () => {
-                const customerName = customerNameEl.value.trim();
-                const customerPhone = customerPhoneEl.value.trim();
-                const contactApp = contactAppEl.value.trim();
-                const contactId = contactIdEl.value.trim();
-                const customerNote = customerNoteEl.value.trim();
+    const paidAt = new Date().toLocaleString('th-TH',{ timeZone: TH_TIMEZONE, hour12:false });
 
-                if (!customerName) return showMessageBox('กรุณากรอกชื่อให้ครบถ้วน', 'red');
-                if (!/^\d{10}$/.test(customerPhone)) return showMessageBox('กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง (10 หลัก)', 'red');
-                if (Object.keys(order.items).length === 0) return showMessageBox('กรุณาเลือกเมนูอย่างน้อย 1 รายการ', 'red');
+    const formData = new FormData();
+    formData.append('queueNumber', currentOrder.queueNumber);
+    formData.append('customerName', currentOrder.customerName);
+    formData.append('customerNote', currentOrder.customerNote||'');
+    formData.append('deliveryDates', JSON.stringify(currentOrder.deliveryDates||[]));
+    formData.append('subtotal', currentOrder.subtotal);
+    formData.append('total', currentOrder.total);
+    formData.append('discount', currentOrder.discount ? JSON.stringify(currentOrder.discount) : '');
+    formData.append('orderDate', currentOrder.orderDate);
+    formData.append('customerPhone', currentOrder.customerContact?.phone || '');
+    formData.append('items', JSON.stringify(currentOrder.items||[]));
+    // ฟิลด์ใหม่สำหรับ “จับคู่ยอด+เวลา”
+    formData.append('paidAt', paidAt);
+    formData.append('paymentMethod', 'PromptPayQR');
+    formData.append('paidStatus', 'customer_reported');
 
-                const finalOrder = {
-                    queueNumber: getOrderQueueNumber(),
-                    customerName: customerName,
-                    customerContact: {
-                        phone: customerPhone,
-                        other: contactApp && contactId ? `${contactApp}: ${contactId}` : ''
-                    },
-                    customerNote: customerNote,
-                    orderDate: new Date().toISOString(),
-                    items: Object.values(order.items).filter(item => item.quantity > 0),
-                    total: order.total
-                };
-                
-                localStorage.setItem('currentOrder', JSON.stringify(finalOrder));
-                renderPaymentPage(finalOrder);
-                orderFormSection.classList.add('hidden');
-                paymentSection.classList.remove('hidden');
-            });
+    await fetchWithRetry(n8nWebhookUrl, { method:'POST', body: formData });
 
-            backToMenuBtn.addEventListener('click', () => {
-                paymentSection.classList.add('hidden');
-                orderFormSection.classList.remove('hidden');
-            });
-            
-            const renderPaymentPage = (finalOrder) => {
-                const displayDate = new Date(finalOrder.orderDate).toLocaleString('th-TH', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    timeZone: 'Asia/Bangkok'
-                });
+    paymentSection.classList.add('hidden');
+    confirmationSection.classList.remove('hidden');
+    renderOrderSummary(document.getElementById('final-order-summary'), currentOrder, true);
+  }catch(err){
+    console.error(err);
+    showMessageBox('เกิดข้อผิดพลาดในการส่งข้อมูลแจ้งชำระเงิน','red');
+  }
+});
 
-                let summaryHtml = `<p class="text-sm font-bold text-gray-700">Order ID: ${finalOrder.queueNumber}</p>`;
-                summaryHtml += `<p class="text-sm font-bold text-gray-700 mt-2">วันที่สั่ง: ${displayDate}</p>`;
-                summaryHtml += `<p class="text-sm font-bold text-gray-700 mt-2">ชื่อลูกค้า: ${finalOrder.customerName}</p>`;
-                summaryHtml += `<p class="text-sm font-bold text-gray-700 mt-2">ช่องทางการติดต่อ: ${finalOrder.customerContact.phone}</p>`;
-                if (finalOrder.customerContact.other) {
-                    summaryHtml += `<p class="text-sm font-bold text-gray-700 mt-2">ช่องทางติดต่ออื่น: ${finalOrder.customerContact.other}</p>`;
-                }
-                if (finalOrder.customerNote) {
-                    summaryHtml += `<p class="text-sm font-bold text-gray-700 mt-2">หมายเหตุ: ${finalOrder.customerNote}</p>`;
-                }
-                summaryHtml += `<div class="mt-4"><h4 class="font-bold">รายการสั่งซื้อ:</h4></div>`;
-                finalOrder.items.forEach(item => {
-                    summaryHtml += `<p class="text-sm text-gray-600">${item.name} x ${item.quantity} ${item.unit} (฿${item.price * item.quantity})</p>`;
-                    if (item.allergyNote) {
-                        summaryHtml += `<p class="ml-4 text-xs text-red-500">หมายเหตุแพ้อาหาร: ${item.allergyNote}</p>`;
-                    }
-                });
-                orderSummaryEl.innerHTML = summaryHtml;
-                paymentTotalEl.textContent = `฿${finalOrder.total}`;
-            };
-            
-            slipUploadEl.addEventListener('change', (event) => {
-                const file = event.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        slipPreviewEl.src = e.target.result;
-                        slipPreviewContainerEl.classList.remove('hidden');
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    slipPreviewContainerEl.classList.add('hidden');
-                    slipPreviewEl.src = '#';
-                }
-            });
-
-            copyAccountBtn.addEventListener('click', () => {
-                const accountNumberText = document.getElementById('bank-account-number').textContent.split(': ')[1];
-                navigator.clipboard.writeText(accountNumberText).then(() => {
-                    showMessageBox('คัดลอกเลขบัญชีแล้ว!', 'green');
-                }, () => {
-                    showMessageBox('คัดลอกไม่สำเร็จ', 'red');
-                });
-            });
-
-            // This is the function that sends data to Firebase
-            uploadSlipBtn.addEventListener('click', async () => {
-                const slipFile = slipUploadEl.files[0];
-                if (!slipFile) {
-                    return showMessageBox('กรุณาอัปโหลดสลิปการโอนเงิน', 'red');
-                }
-
-                uploadSlipBtn.disabled = true;
-                uploadSlipTextEl.classList.add('hidden');
-                uploadSlipSpinnerEl.classList.remove('hidden');
-
-                try {
-                    const currentOrder = JSON.parse(localStorage.getItem('currentOrder'));
-                    if (!currentOrder) {
-                        throw new Error("ไม่พบข้อมูลออเดอร์");
-                    }
-
-                    // 1. Upload image to Firebase Storage
-                    const storageRef = ref(storage, `slips/${currentOrder.queueNumber}_${new Date().getTime()}_${slipFile.name}`);
-                    const snapshot = await uploadBytes(storageRef, slipFile);
-                    const downloadURL = await getDownloadURL(snapshot.ref);
-
-                    // 2. Prepare data for Firestore
-                    const orderData = {
-                        ...currentOrder,
-                        slipUrl: downloadURL,
-                        status: 'pending', // Initial status
-                        createdAt: serverTimestamp()
-                    };
-
-                    // 3. Save order data to Firestore
-                    await addDoc(collection(db, "orders"), orderData);
-
-                    // 4. Show confirmation
-                    paymentSection.classList.add('hidden');
-                    confirmationSection.classList.remove('hidden');
-
-                } catch (error) {
-                    console.error("Error submitting order: ", error);
-                    showMessageBox('เกิดข้อผิดพลาดในการส่งข้อมูล', 'red');
-                } finally {
-                    uploadSlipBtn.disabled = false;
-                    uploadSlipTextEl.classList.remove('hidden');
-                    uploadSlipSpinnerEl.classList.add('hidden');
-                }
-            });
-
-            // Initial render
-            renderMenu();
-        });
-    </script>
+/* ================== INIT ================== */
+document.addEventListener('DOMContentLoaded', ()=>{
+  renderMenu(); updateTotal(); renderDeliveryDates();
+  deliveryDatesContainerEl.addEventListener('change', ()=>{
+    const selectedCount = deliveryDatesContainerEl.querySelectorAll('input:checked').length;
+    if(selectedCount>1) deliveryWarningEl.classList.remove('hidden'); else deliveryWarningEl.classList.add('hidden');
+  });
+});
+</script>
 </body>
 </html>
